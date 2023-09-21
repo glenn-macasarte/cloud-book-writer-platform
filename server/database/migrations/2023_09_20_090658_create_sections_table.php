@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('book_id');
             $table->integer('parent_id')->default(0);
             $table->integer('created_by');
-            $table->integer('updated_by');
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
