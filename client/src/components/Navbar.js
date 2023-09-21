@@ -13,9 +13,9 @@ function Navbar() {
                     {/* <li className="nav-item">
                         <Link className="nav-link active" aria-current="page" to="/list">List</Link>
                     </li> */}
-                    <li className="nav-item">
+                    {/* <li className="nav-item">
                         <Link className="nav-link" to="/books/create">Add Book</Link>
-                    </li>
+                    </li> */}
                 </ul>
                 </div>
             </div>

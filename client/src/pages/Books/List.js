@@ -28,7 +28,7 @@ function List() {
                 <td>{item.description}</td>
                 <td>{item.user.name}</td>
                 <td>
-                    <Link to="/" className="btn btn-success">Add Section</Link>&nbsp;
+                    <Link to="/" className="btn btn-primary">Add Section</Link>&nbsp;
                     <Link to={`/books/${item.id}/edit`} className="btn btn-success">Edit</Link>&nbsp;
                     <button type="submit" onClick={deleteBook} className="btn btn-danger" value={item.id}>Delete</button>
                 </td>
@@ -42,7 +42,9 @@ function List() {
                 <div className="col-md-12">
                     <div className="card">
                         <div className="card-header">
-                            <h4>List</h4>
+                            <h4>List
+                                <Link to="/books/create" className="btn btn-secondary float-end">Add Book</Link>
+                            </h4>
                         </div>
                         <div className="card-body">
                             <table className="table table-striped">

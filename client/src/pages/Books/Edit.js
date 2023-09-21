@@ -7,7 +7,10 @@ function Edit() {
     
     const navigate = useNavigate();
 
-    const [book, setBook] = useState({});
+    const [book, setBook] = useState({
+        name: '',
+        description: ''
+    });
 
     useEffect(() => {
         axios.get(`http://127.0.0.1:8000/api/v1/books/${id}`).then(res => {
