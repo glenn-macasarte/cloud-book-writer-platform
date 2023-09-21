@@ -1,40 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 
-function Edit() {
-    let { id } = useParams();
-    
+function Add() {
+    let { book_id } = useParams();
+
     const navigate = useNavigate();
 
-    const [book, setBook] = useState({
-        name: '',
+    const [section, setSection] = useState({
+        title: '',
         description: ''
     });
 
-    useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/v1/books/${id}`).then(res => {
-            setBook(res.data);
-        });
-    }, [id]);
-
     const handleInput = (e) => {
         e.persist();
-        setBook({...book, [e.target.name]: e.target.value});
+        setSection({...section, [e.target.name]: e.target.value});
     };
 
-    const updateBook = (e) => {
+    const saveSection = (e) => {
         e.preventDefault();
         const data = {
-            name: book.name,
-            description: book.description,
-            updated_by: 2
+            title: section.title,
+            description: section.description,
+            book_id: book_id,
+            created_by: 1
         }
 
-        axios.put(`http://127.0.0.1:8000/api/v1/books/${id}`, data)
+        axios.post(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections`, data)
             .then(res => {
                 alert(res.data.message);
-                navigate('/books/list');
+                navigate(`/books/${book_id}/sections`);
             })
             .catch(function (error) {
                 if (error.response.status === 422) {
@@ -49,19 +44,19 @@ function Edit() {
                 <div className="col-md-12">
                     <div className="card">
                         <div className="card-header">
-                            <h4>EDIT BOOK
-                                <Link to="/books/list" className="btn btn-danger float-end">Back</Link>
+                            <h4>ADD SECTION
+                                <Link to={`/books/${book_id}/sections`} className="btn btn-danger float-end">Back</Link>
                             </h4>
                         </div>
                         <div className="card-body">
-                            <form onSubmit={updateBook}>
+                            <form onSubmit={saveSection}>
                                 <div className="mb-3">
-                                    <label>Book Name</label>
-                                    <input type="text" name="name" value={book.name} onChange={handleInput} className="form-control" ></input>
+                                    <label>Title</label>
+                                    <input type="text" name="title" value={section.name} onChange={handleInput} className="form-control" ></input>
                                 </div>
                                 <div className="mb-3">
                                     <label>Description</label>
-                                    <input type="text" name="description" value={book.description} onChange={handleInput} className="form-control" ></input>
+                                    <input type="text" name="description" value={section.description} onChange={handleInput} className="form-control" ></input>
                                 </div>
                                 <div className="mb-3">
                                     <button type="submit" className="btn btn-success">Submit</button>
@@ -75,4 +70,4 @@ function Edit() {
     )
 }
 
-export default Edit;
+export default Add;

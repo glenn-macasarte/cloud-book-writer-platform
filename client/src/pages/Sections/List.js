@@ -1,38 +1,45 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 function List() {
-    const [books, setBooks] = useState([]);
+    let { book_id } = useParams();
+
+    const [book, setBook] = useState([]);
+    const [sections, setSections] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/v1/books`).then(res => {
-            setBooks(res.data);
+        axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}`).then(res => {
+            setBook(res.data);
+        });
+
+        axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections`).then(res => {
+            setSections(res.data);
         });
     }, []);
 
-    const deleteBook = (e) => {
+    const deleteSection = (e) => {
         if (window.confirm("Delete this section?")) {
             const id = e.target.value;
-            axios.delete(`http://127.0.0.1:8000/api/v1/books/${id}`).then(res => {
+            axios.delete(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${id}`).then(res => {
                 alert(res.data.message);
                 window.location.reload();
             });
         }
     }
 
-    var bookDetails = "";
-    bookDetails = books.map( (item, index) => {
+    var sectionDetails = "";
+    sectionDetails = sections.map( (item, index) => {
         return (
             <tr key={index}>
                 <td>{item.id}</td>
-                <td>{item.name}</td>
+                <td>{item.title}</td>
                 <td>{item.description}</td>
-                <td>{item.user.name}</td>
+                <td>{item.created_by}</td>
                 <td style={{ textAlign: "center" }}>
-                    <Link to={`/books/${item.id}/sections`} className="btn btn-primary">View Sections</Link>&nbsp;
-                    <Link to={`/books/${item.id}/edit`} className="btn btn-success">Edit</Link>&nbsp;
-                    <button type="submit" onClick={deleteBook} className="btn btn-danger" value={item.id}>Delete</button>
+                    <Link to={`/books/${book_id}/sections/${item.id}/subsections`} className="btn btn-primary">View Subsections</Link>&nbsp;
+                    <Link to={`/books/${book_id}/sections/${item.id}/edit`} className="btn btn-success">Edit</Link>&nbsp;
+                    <button type="submit" onClick={deleteSection} className="btn btn-danger" value={item.id}>Delete</button>
                 </td>
             </tr>
         )
@@ -44,24 +51,27 @@ function List() {
                 <div className="col-md-12">
                     <div className="card">
                         <div className="card-header">
-                            <h4>BOOKS LIST
-                                <Link to="/books/create" className="btn btn-secondary float-end">Add Book</Link>
+                            <h4>SECTIONS LIST ({book.name})
+                                <div className="float-end">
+                                    <Link to="/books/list" className="btn btn-danger">Back</Link>&nbsp;
+                                    <Link to={`/books/${book.id}/sections/create`} className="btn btn-secondary">Add Section</Link>
+                                </div>
                             </h4>
                         </div>
                         <div className="card-body">
-                            {bookDetails.length > 0 
+                            {sectionDetails.length > 0 
                                 ? <table className="table table-striped">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Name</th>
+                                            <th>Title</th>
                                             <th>Description</th>
                                             <th>Author</th>
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {bookDetails}
+                                        {sectionDetails}
                                     </tbody>
                                 </table>
                                 : <h5 className="">No Results</h5>

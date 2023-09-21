@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 
 function Add() {
     const navigate = useNavigate();
@@ -19,7 +19,8 @@ function Add() {
         e.preventDefault();
         const data = {
             name: book.name,
-            description: book.description
+            description: book.description,
+            created_by: 1
         }
 
         axios.post('http://127.0.0.1:8000/api/v1/books', data)
@@ -40,7 +41,7 @@ function Add() {
                 <div className="col-md-12">
                     <div className="card">
                         <div className="card-header">
-                            <h4>Add Book
+                            <h4>ADD BOOK
                                 <Link to="/books/list" className="btn btn-danger float-end">Back</Link>
                             </h4>
                         </div>

@@ -1,15 +1,25 @@
 import { Routes, Route } from 'react-router-dom';
 
-import List from '../pages/Books/List';
-import Add from '../pages/Books/Add';
-import Edit from '../pages/Books/Edit';
+import BookList from '../pages/Books/List';
+import BookAdd from '../pages/Books/Add';
+import BookEdit from '../pages/Books/Edit';
+import Login from '../pages/Login/Login';
+import SectionList from '../pages/Sections/List';
+import SectionAdd from '../pages/Sections/Add';
+import SectionEdit from '../pages/Sections/Edit';
+import SubSectionList from '../pages/Subsections/List';
 
 function MyRouter() {
     return (
         <Routes>
-            <Route path="/books/list" element={<List />} />
-            <Route path="/books/create" element={<Add />} />
-            <Route path="/books/:id/edit" element={<Edit />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/books/list" element={<BookList />} />
+            <Route path="/books/create" element={<BookAdd />} />
+            <Route path="/books/:id/edit" element={<BookEdit />} />
+            <Route path="/books/:book_id/sections" element={<SectionList />} />
+            <Route path="/books/:book_id/sections/create" element={<SectionAdd />} />
+            <Route path="/books/:book_id/sections/:section_id/edit" element={<SectionEdit />} />
+            <Route path="/books/:book_id/sections/:section_id/subsections" element={<SubSectionList />} />
         </Routes>        
     )
 }

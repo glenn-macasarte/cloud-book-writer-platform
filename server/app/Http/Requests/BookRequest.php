@@ -21,10 +21,20 @@ class BookRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name'          => ['required'],
-            'description'   => ['required'],
-            'created_by'    => ['required'],
-        ];
+        if (request()->isMethod('POST')) {
+            $rules = [
+                'name'          => ['required'],
+                'description'   => ['required'],
+                'created_by'    => ['required'],
+            ];
+        } elseif (request()->isMethod('PUT')) {
+            $rules = [
+                'name'          => ['required'],
+                'description'   => ['required'],
+                'updated_by'    => ['required'],
+            ];
+        }
+        
+        return $rules;
     }
 }

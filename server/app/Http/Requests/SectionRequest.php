@@ -21,11 +21,22 @@ class SectionRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'title'         => ['required'],
-            'description'   => ['required'],
-            'book_id'       => ['required'],
-            'created_by'    => ['required'],
-        ];
+        if (request()->isMethod('POST')) {
+            $rules = [
+                'title'         => ['required'],
+                'description'   => ['required'],
+                'book_id'       => ['required'],
+                'created_by'    => ['required'],
+            ];
+        } elseif (request()->isMethod('PUT')) {
+            $rules = [
+                'title'         => ['required'],
+                'description'   => ['required'],
+                'book_id'       => ['required'],
+                'updated_by'    => ['required'],
+            ];
+        }
+
+        return $rules;
     }
 }

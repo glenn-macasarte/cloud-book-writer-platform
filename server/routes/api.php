@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +33,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::put('/books/{book}/sections/{section}', 'update');
         Route::delete('/books/{book}/sections/{section}', 'destroy');
     });
+
+    // route for login
+    Route::post('/login', [AuthController::class, 'login']);
 });
