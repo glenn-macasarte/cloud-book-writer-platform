@@ -23,16 +23,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1'], function() {
     // routes for books module using apiResource
-    Route::apiResource('books', BookController::class);
+    Route::apiResource('books', BookController::class)->middleware(['auth:sanctum']);
 
     // routes for sections/subsections module using Controller group
     Route::controller(SectionController::class)->group(function () {
-        Route::get('/books/{book}/sections', 'index');
-        Route::get('/books/{book}/sections/{section}', 'show');
-        Route::post('/books/{book}/sections', 'store');
-        Route::put('/books/{book}/sections/{section}', 'update');
-        Route::delete('/books/{book}/sections/{section}', 'destroy');
-        Route::get('/books/{book}/sections/{section}/subsections', 'subsections');
+        Route::get('/books/{book}/sections', 'index')->middleware(['auth:sanctum']);
+        Route::get('/books/{book}/sections/{section}', 'show')->middleware(['auth:sanctum']);
+        Route::post('/books/{book}/sections', 'store')->middleware(['auth:sanctum']);
+        Route::put('/books/{book}/sections/{section}', 'update')->middleware(['auth:sanctum']);
+        Route::delete('/books/{book}/sections/{section}', 'destroy')->middleware(['auth:sanctum']);
+        Route::get('/books/{book}/sections/{section}/subsections', 'subsections')->middleware(['auth:sanctum']);
     });
 
     // route for login

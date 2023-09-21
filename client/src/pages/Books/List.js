@@ -1,20 +1,27 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function List() {
     const [books, setBooks] = useState([]);
+    const navigate = useNavigate();
+    const auth_token = localStorage.getItem("auth_token");
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/v1/books`).then(res => {
-            setBooks(res.data);
-        });
+        const logged_user = localStorage.getItem("logged_user");
+        if (!logged_user) {
+            navigate('/login');
+        } else {
+            axios.get(`http://127.0.0.1:8000/api/v1/books`, {headers: { Authorization: `Bearer ${auth_token}` }}).then(res => {
+                setBooks(res.data);
+            });
+        }
     }, []);
 
     const deleteBook = (e) => {
         if (window.confirm("Delete this section?")) {
             const id = e.target.value;
-            axios.delete(`http://127.0.0.1:8000/api/v1/books/${id}`).then(res => {
+            axios.delete(`http://127.0.0.1:8000/api/v1/books/${id}`, {headers: { Authorization: `Bearer ${auth_token}` }}).then(res => {
                 alert(res.data.message);
                 window.location.reload();
             });

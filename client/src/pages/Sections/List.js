@@ -1,27 +1,34 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 
 function List() {
     let { book_id } = useParams();
 
     const [book, setBook] = useState([]);
     const [sections, setSections] = useState([]);
+    const navigate = useNavigate();
+    const auth_token = localStorage.getItem("auth_token");
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}`).then(res => {
-            setBook(res.data);
-        });
+        const logged_user = localStorage.getItem("logged_user");
+        if (!logged_user) {
+            navigate('/login');
+        } else {
+            axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}`, {headers: { Authorization: `Bearer ${auth_token}` }}).then(res => {
+                setBook(res.data);
+            });
 
-        axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections`).then(res => {
-            setSections(res.data);
-        });
+            axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections`, {headers: { Authorization: `Bearer ${auth_token}` }}).then(res => {
+                setSections(res.data);
+            });
+        }
     }, []);
 
     const deleteSection = (e) => {
         if (window.confirm("Delete this section?")) {
             const id = e.target.value;
-            axios.delete(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${id}`).then(res => {
+            axios.delete(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${id}`, {headers: { Authorization: `Bearer ${auth_token}` }}).then(res => {
                 alert(res.data.message);
                 window.location.reload();
             });

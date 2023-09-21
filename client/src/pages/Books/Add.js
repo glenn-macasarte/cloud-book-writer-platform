@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -9,6 +9,13 @@ function Add() {
         name: '',
         description: ''
     });
+
+    useEffect(() => {
+        const logged_user = localStorage.getItem("logged_user");
+        if (!logged_user) {
+            navigate('/login');
+        }
+    }, []);
 
     const handleInput = (e) => {
         e.persist();
@@ -23,7 +30,8 @@ function Add() {
             created_by: 1
         }
 
-        axios.post('http://127.0.0.1:8000/api/v1/books', data)
+        const auth_token = localStorage.getItem("auth_token");
+        axios.post('http://127.0.0.1:8000/api/v1/books', data, {headers: { Authorization: `Bearer ${auth_token}` }})
             .then(res => {
                 alert(res.data.message);
                 navigate('/books/list');

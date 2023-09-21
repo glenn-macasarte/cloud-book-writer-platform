@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 
 function List() {
     let { book_id } = useParams();
@@ -9,21 +9,28 @@ function List() {
     const [book, setBook] = useState([]);
     const [section, setSection] = useState([]);
     const [subsections, setSubsections] = useState([]);
+    const navigate = useNavigate();
+    const auth_token = localStorage.getItem("auth_token");
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${section_id}`).then(res => {
-            setSection(res.data);
-        });
-
-        axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${section_id}/subsections`).then(res => {
-            setSubsections(res.data);
-        });
+        const logged_user = localStorage.getItem("logged_user");
+        if (!logged_user) {
+            navigate('/login');
+        } else {
+            axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${section_id}`, {headers: { Authorization: `Bearer ${auth_token}` }}).then(res => {
+                setSection(res.data);
+            });
+    
+            axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${section_id}/subsections`, {headers: { Authorization: `Bearer ${auth_token}` }}).then(res => {
+                setSubsections(res.data);
+            });
+        }
     }, []);
 
     const deleteSection = (e) => {
         if (window.confirm("Delete this section?")) {
             const id = e.target.value;
-            axios.delete(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${id}`).then(res => {
+            axios.delete(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${id}`, {headers: { Authorization: `Bearer ${auth_token}` }}).then(res => {
                 alert(res.data.message);
                 window.location.reload();
             });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -7,6 +7,14 @@ function Add() {
     let { parent_id } = useParams();
 
     const navigate = useNavigate();
+    const auth_token = localStorage.getItem("auth_token");
+
+    useEffect(() => {
+        const logged_user = localStorage.getItem("logged_user");
+        if (!logged_user) {
+            navigate('/login');
+        }
+    }, []);
 
     const [section, setSection] = useState({
         title: '',
@@ -28,7 +36,7 @@ function Add() {
             created_by: 1
         }
 
-        axios.post(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections`, data)
+        axios.post(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections`, data, {headers: { Authorization: `Bearer ${auth_token}` }})
             .then(res => {
                 alert(res.data.message);
                 navigate(`/books/${book_id}/sections`);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -8,6 +8,13 @@ function Login() {
         email: '',
         password: ''
     })
+
+    useEffect(() => {
+        const logged_user = localStorage.getItem("logged_user");
+        if (logged_user) {
+            navigate('/books/list');
+        }
+    }, []);
 
     const handleInput = (e) => {
         e.persist();
@@ -21,19 +28,17 @@ function Login() {
             password: user.password
         }
 
-        axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie')
+        axios.post('http://127.0.0.1:8000/api/v1/login', data, { headers: { 'Accept': 'application/json' } })
             .then(res => {
-                axios.post('http://127.0.0.1:8000/api/v1/login', data, {headers: { 'Accept': 'application/json' } })
-                    .then(res => {
-                        console.log(111, res.data);
-                        // navigate('/books/list');
-                    })
-                    .catch(function (error) {
-                        console.log(222, error);
-                        if (error.response.status === 422) {
-                            alert(error.response.data.message);
-                        }
-                    });
+                localStorage.setItem('logged_user', JSON.stringify(res.data.user));
+                localStorage.setItem('auth_token', res.data.token);
+                navigate('/books/list');
+            })
+            .catch(function (error) {
+                console.log(222, error);
+                if (error.response.status === 422) {
+                    alert(error.response.data.message);
+                }
             });
     }
 

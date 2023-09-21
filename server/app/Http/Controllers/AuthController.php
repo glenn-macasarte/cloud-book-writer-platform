@@ -16,24 +16,19 @@ class AuthController extends Controller
         $credentials = $request->validated();
 
         // get user for that emailcredentials
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
- 
-            return redirect()->intended('dashboard');
+        if (!Auth::attempt($credentials)) {
+            return response()->json([
+                'message' => 'Credentials invalid.'
+            ], 422);
         }
 
-        // check if users exists and if password matched
-        // if (!$user || !Hash::check($data['password'], $user->password)) {
-        //     return response()->json([
-        //         'message' => 'Email or password is incorrect!'
-        //     ], 401);
-        // }
+        $user = User::where('email', $credentials['email'])->first();
+        $authToken = $user->createToken('auth-token')->plainTextToken;
 
-        // $token = $user->createToken('auth_token')->plainTextToken;
-        // $cookie = cookie('token', $token, 60 * 24); // 1 day
-
-        // return response()->json([
-        //     $user
-        // ], 200)->withCookie($cookie);
+        return response()->json([
+            'message' => 'Successfully logged in.',
+            'user' => $user,
+            'token' => $authToken
+        ], 200);
     }
 }

@@ -8,6 +8,7 @@ function Edit() {
     let { parent_id } = useParams();
     
     const navigate = useNavigate();
+    const auth_token = localStorage.getItem("auth_token");
 
     const [section, setSection] = useState({
         title: '',
@@ -15,9 +16,14 @@ function Edit() {
     });
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${section_id}`).then(res => {
-            setSection(res.data);
-        });
+        const logged_user = localStorage.getItem("logged_user");
+        if (!logged_user) {
+            navigate('/login');
+        } else {
+            axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${section_id}`, {headers: { Authorization: `Bearer ${auth_token}` }}).then(res => {
+                setSection(res.data);
+            });
+        }
     }, []);
 
     const handleInput = (e) => {
@@ -35,7 +41,7 @@ function Edit() {
             updated_by: 2
         }
 
-        axios.put(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${section.id}`, data)
+        axios.put(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${section.id}`, data, {headers: { Authorization: `Bearer ${auth_token}` }})
             .then(res => {
                 alert(res.data.message);
                 navigate(`/books/${book_id}/sections`);
