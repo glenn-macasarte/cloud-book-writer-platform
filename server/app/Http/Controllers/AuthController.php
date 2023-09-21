@@ -22,7 +22,12 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user = User::where('email', $credentials['email'])->first();
+        $user = User::where('email', $credentials['email'])->where('role', '!=', 0)->first();
+        if (!$user) {
+            return response()->json([
+                'message' => 'User has no permission to access the site.'
+            ], 422);
+        }
         $authToken = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([

@@ -20,7 +20,7 @@ function List() {
     }, []);
 
     const deleteBook = (e) => {
-        if (window.confirm("Delete this section?")) {
+        if (window.confirm("Delete this book?")) {
             const id = e.target.value;
             axios.delete(`http://127.0.0.1:8000/api/v1/books/${id}`, {headers: { Authorization: `Bearer ${auth_token}` }}).then(res => {
                 alert(res.data.message);
