@@ -9,6 +9,8 @@ function Edit() {
     
     const navigate = useNavigate();
     const auth_token = localStorage.getItem("auth_token");
+    const logged_user = localStorage.getItem("logged_user");
+    const user = JSON.parse(logged_user);
 
     const [section, setSection] = useState({
         title: '',
@@ -16,7 +18,6 @@ function Edit() {
     });
 
     useEffect(() => {
-        const logged_user = localStorage.getItem("logged_user");
         if (!logged_user) {
             navigate('/login');
         } else {
@@ -38,7 +39,7 @@ function Edit() {
             description: section.description,
             book_id: book_id,
             parent_id: parent_id ?? 0,
-            updated_by: 2
+            updated_by: user.id
         }
 
         axios.put(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${section.id}`, data, {headers: { Authorization: `Bearer ${auth_token}` }})

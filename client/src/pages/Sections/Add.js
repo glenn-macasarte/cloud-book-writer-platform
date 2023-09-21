@@ -8,9 +8,10 @@ function Add() {
 
     const navigate = useNavigate();
     const auth_token = localStorage.getItem("auth_token");
+    const logged_user = localStorage.getItem("logged_user");
+    const user = JSON.parse(logged_user);
 
     useEffect(() => {
-        const logged_user = localStorage.getItem("logged_user");
         if (!logged_user) {
             navigate('/login');
         }
@@ -33,7 +34,7 @@ function Add() {
             description: section.description,
             book_id: book_id,
             parent_id: parent_id ?? 0,
-            created_by: 1
+            created_by: user.id
         }
 
         axios.post(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections`, data, {headers: { Authorization: `Bearer ${auth_token}` }})

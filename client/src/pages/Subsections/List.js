@@ -11,9 +11,10 @@ function List() {
     const [subsections, setSubsections] = useState([]);
     const navigate = useNavigate();
     const auth_token = localStorage.getItem("auth_token");
+    const logged_user = localStorage.getItem("logged_user");
+    const user = JSON.parse(logged_user);
 
     useEffect(() => {
-        const logged_user = localStorage.getItem("logged_user");
         if (!logged_user) {
             navigate('/login');
         } else {
@@ -48,7 +49,7 @@ function List() {
                 <td style={{ textAlign: "center" }}>
                     <Link reloadDocument to={`/books/${book_id}/sections/${item.id}/subsections`} className="btn btn-primary">View Subsections</Link>&nbsp;
                     <Link to={`/books/${book_id}/sections/${item.id}/edit/${section.id}`} className="btn btn-success">Edit</Link>&nbsp;
-                    <button type="submit" onClick={deleteSection} className="btn btn-danger" value={item.id}>Delete</button>
+                    {user.role === 1 && <button type="submit" onClick={deleteSection} className="btn btn-danger" value={item.id}>Delete</button>}
                 </td>
             </tr>
         )
@@ -63,7 +64,9 @@ function List() {
                             <h4>SUBSECTIONS LIST ({section.title})
                                 <div className="float-end">
                                     <Link to={`/books/${book_id}/sections`} className="btn btn-danger">Back</Link>&nbsp;
-                                    <Link to={`/books/${book_id}/sections/create/${section.id}`} className="btn btn-secondary">Add Subsection</Link>
+                                    {user.role === 1 && 
+                                        <Link to={`/books/${book_id}/sections/create/${section.id}`} className="btn btn-secondary">Add Subsection</Link>
+                                    }
                                 </div>
                             </h4>
                         </div>

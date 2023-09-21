@@ -35,7 +35,6 @@ function Login() {
                 navigate('/books/list');
             })
             .catch(function (error) {
-                console.log(222, error);
                 if (error.response.status === 422) {
                     alert(error.response.data.message);
                 }

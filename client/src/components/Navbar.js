@@ -26,6 +26,11 @@ function Navbar() {
                             <li className="nav-item">
                                 <span className="nav-link active">{user.name}</span>
                             </li>
+                            {user.role === 1 &&
+                                <li className="nav-item">
+                                    <Link className="nav-link active" aria-current="page" to="/collaborators">Collaborators</Link>
+                                </li>
+                            }
                             <li className="nav-item">
                                 <button onClick={logout} type="submit" className="nav-link">Logout</button>
                             </li>

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 
 function List() {
-    const [books, setBooks] = useState([]);
+    const [collaborators, setCollaborators] = useState([]);
     const navigate = useNavigate();
     const auth_token = localStorage.getItem("auth_token");
     const logged_user = localStorage.getItem("logged_user");
@@ -12,38 +12,43 @@ function List() {
     useEffect(() => {
         if (!logged_user) {
             navigate('/login');
+        } else if (user.role === 2) {
+            navigate('/books/list');
         } else {
-            axios.get(`http://127.0.0.1:8000/api/v1/books`, {headers: { Authorization: `Bearer ${auth_token}` }}).then(res => {
-                setBooks(res.data);
+            axios.get(`http://127.0.0.1:8000/api/v1/collaborators`, {headers: { Authorization: `Bearer ${auth_token}` }}).then(res => {
+                setCollaborators(res.data.collaborators);
             });
         }
     }, []);
 
-    const deleteBook = (e) => {
-        if (window.confirm("Delete this section?")) {
-            const id = e.target.value;
-            axios.delete(`http://127.0.0.1:8000/api/v1/books/${id}`, {headers: { Authorization: `Bearer ${auth_token}` }}).then(res => {
-                alert(res.data.message);
-                window.location.reload();
-            });
-        }
+    const removePermission = (e) => {
+        const id = e.target.value;
+        const new_role = 0;
+        axios.put(`http://127.0.0.1:8000/api/v1/collaborators/${id}/${new_role}`, {headers: { Authorization: `Bearer ${auth_token}` }}).then(res => {
+            window.location.reload();
+        });
     }
 
-    var bookDetails = "";
-    bookDetails = books.map( (item, index) => {
+    const grantPermission = (e) => {
+        const id = e.target.value;
+        const new_role = 2;
+        axios.put(`http://127.0.0.1:8000/api/v1/collaborators/${id}/${new_role}`, {headers: { Authorization: `Bearer ${auth_token}` }}).then(res => {
+            window.location.reload();
+        });
+    }
+
+    var collaboratorDetails = "";
+    collaboratorDetails = collaborators.map( (item, index) => {
         return (
             <tr key={index}>
                 <td>{item.id}</td>
                 <td>{item.name}</td>
-                <td>{item.description}</td>
-                <td>{item.user.name}</td>
-                <td style={{ textAlign: "center" }}>
-                    <Link to={`/books/${item.id}/sections`} className="btn btn-primary">View Sections</Link>&nbsp;
-                    {user.role === 1 && 
-                        <>
-                        <Link to={`/books/${item.id}/edit`} className="btn btn-success">Edit</Link>&nbsp;
-                        <button type="submit" onClick={deleteBook} className="btn btn-danger" value={item.id}>Delete</button>
-                        </>
+                <td>
+                    {item.role === 2 
+                        ?
+                        <button type="submit" onClick={removePermission} className="btn btn-danger" value={item.id}>Remove Permission</button>
+                        :
+                        <button type="submit" onClick={grantPermission} className="btn btn-success" value={item.id}>Grant Permission</button>
                     }
                 </td>
             </tr>
@@ -56,24 +61,20 @@ function List() {
                 <div className="col-md-12">
                     <div className="card">
                         <div className="card-header">
-                            <h4>BOOKS LIST
-                                {user.role === 1 && <Link to="/books/create" className="btn btn-secondary float-end">Add Book</Link>}
-                            </h4>
+                            <h4>COLLABORATORS LIST</h4>
                         </div>
                         <div className="card-body">
-                            {bookDetails.length > 0 
+                            {collaboratorDetails.length > 0 
                                 ? <table className="table table-striped">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
                                             <th>Name</th>
-                                            <th>Description</th>
-                                            <th>Author</th>
-                                            <th></th>
+                                            <th>Manage Permission</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {bookDetails}
+                                        {collaboratorDetails}
                                     </tbody>
                                 </table>
                                 : <h5 className="">No Results</h5>

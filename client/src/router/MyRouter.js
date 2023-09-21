@@ -8,6 +8,7 @@ import SectionList from '../pages/Sections/List';
 import SectionAdd from '../pages/Sections/Add';
 import SectionEdit from '../pages/Sections/Edit';
 import SubSectionList from '../pages/Subsections/List';
+import Collaborators from '../pages/Users/List';
 
 function MyRouter() {
     return (
@@ -20,6 +21,7 @@ function MyRouter() {
             <Route path="/books/:book_id/sections/create/:parent_id?" element={<SectionAdd />} />
             <Route path="/books/:book_id/sections/:section_id/edit/:parent_id?" element={<SectionEdit />} />
             <Route path="/books/:book_id/sections/:section_id/subsections" element={<SubSectionList />} />
+            <Route path="/collaborators" element={<Collaborators />} />
         </Routes>        
     )
 }

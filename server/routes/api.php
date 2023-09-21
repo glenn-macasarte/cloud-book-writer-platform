@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,10 @@ Route::group(['prefix' => 'v1'], function() {
         Route::delete('/books/{book}/sections/{section}', 'destroy')->middleware(['auth:sanctum']);
         Route::get('/books/{book}/sections/{section}/subsections', 'subsections')->middleware(['auth:sanctum']);
     });
+
+    // routes for collaborators 
+    Route::get('/collaborators', [UserController::class, 'collaborators'])->middleware(['auth:sanctum']);
+    Route::put('/collaborators/{user}/{role}', [UserController::class, 'updateRole']);
 
     // route for login
     Route::post('/login', [AuthController::class, 'login']);

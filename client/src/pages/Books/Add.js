@@ -4,6 +4,8 @@ import axios from "axios";
 
 function Add() {
     const navigate = useNavigate();
+    const logged_user = localStorage.getItem("logged_user");
+    const user = JSON.parse(logged_user);
 
     const [book, setBook] = useState({
         name: '',
@@ -11,7 +13,6 @@ function Add() {
     });
 
     useEffect(() => {
-        const logged_user = localStorage.getItem("logged_user");
         if (!logged_user) {
             navigate('/login');
         }
@@ -27,7 +28,7 @@ function Add() {
         const data = {
             name: book.name,
             description: book.description,
-            created_by: 1
+            created_by: user.id
         }
 
         const auth_token = localStorage.getItem("auth_token");
