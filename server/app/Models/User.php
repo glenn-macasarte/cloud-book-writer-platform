@@ -48,4 +48,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Book::class, 'created_by', 'id');
     }
+
+    public function sections(): HasMany
+    {
+        return $this->hasMany(Section::class, 'created_by', 'id');
+    }
 }

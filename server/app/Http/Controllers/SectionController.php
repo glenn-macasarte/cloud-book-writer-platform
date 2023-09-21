@@ -11,7 +11,7 @@ class SectionController extends Controller
 {
     public function index(Book $book)
     {
-        $sections = Section::where('book_id', $book->id)->get();
+        $sections = Section::where('book_id', $book->id)->where('parent_id', 0)->with('user')->get();
         return response()->json($sections);
     }
 
@@ -51,5 +51,11 @@ class SectionController extends Controller
 
         $section->delete();
         return response()->json(['message' => 'Section Deleted.'], 202);
+    }
+
+    public function subsections(Book $book, Section $section)
+    {
+        $sections = Section::where('book_id', $book->id)->where('parent_id', $section->id)->with('user')->get();
+        return response()->json($sections);
     }
 }

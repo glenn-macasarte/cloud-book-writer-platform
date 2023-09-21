@@ -26,6 +26,7 @@ class SectionRequest extends FormRequest
                 'title'         => ['required'],
                 'description'   => ['required'],
                 'book_id'       => ['required'],
+                'parent_id'     => ['required'],
                 'created_by'    => ['required'],
             ];
         } elseif (request()->isMethod('PUT')) {
@@ -33,6 +34,7 @@ class SectionRequest extends FormRequest
                 'title'         => ['required'],
                 'description'   => ['required'],
                 'book_id'       => ['required'],
+                'parent_id'     => ['required'],
                 'updated_by'    => ['required'],
             ];
         }

@@ -4,17 +4,19 @@ import { Link, useParams } from 'react-router-dom';
 
 function List() {
     let { book_id } = useParams();
+    let { section_id } = useParams();
 
     const [book, setBook] = useState([]);
-    const [sections, setSections] = useState([]);
+    const [section, setSection] = useState([]);
+    const [subsections, setSubsections] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}`).then(res => {
-            setBook(res.data);
+        axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${section_id}`).then(res => {
+            setSection(res.data);
         });
 
-        axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections`).then(res => {
-            setSections(res.data);
+        axios.get(`http://127.0.0.1:8000/api/v1/books/${book_id}/sections/${section_id}/subsections`).then(res => {
+            setSubsections(res.data);
         });
     }, []);
 
@@ -29,7 +31,7 @@ function List() {
     }
 
     var sectionDetails = "";
-    sectionDetails = sections.map( (item, index) => {
+    sectionDetails = subsections.map( (item, index) => {
         return (
             <tr key={index}>
                 <td>{item.id}</td>
@@ -37,8 +39,8 @@ function List() {
                 <td>{item.description}</td>
                 <td>{item.user.name}</td>
                 <td style={{ textAlign: "center" }}>
-                    <Link to={`/books/${book_id}/sections/${item.id}/subsections`} className="btn btn-primary">View Subsections</Link>&nbsp;
-                    <Link to={`/books/${book_id}/sections/${item.id}/edit`} className="btn btn-success">Edit</Link>&nbsp;
+                    <Link reloadDocument to={`/books/${book_id}/sections/${item.id}/subsections`} className="btn btn-primary">View Subsections</Link>&nbsp;
+                    <Link to={`/books/${book_id}/sections/${item.id}/edit/${section.id}`} className="btn btn-success">Edit</Link>&nbsp;
                     <button type="submit" onClick={deleteSection} className="btn btn-danger" value={item.id}>Delete</button>
                 </td>
             </tr>
@@ -51,10 +53,10 @@ function List() {
                 <div className="col-md-12">
                     <div className="card">
                         <div className="card-header">
-                            <h4>SECTIONS LIST ({book.name})
+                            <h4>SUBSECTIONS LIST ({section.title})
                                 <div className="float-end">
-                                    <Link to="/books/list" className="btn btn-danger">Back</Link>&nbsp;
-                                    <Link to={`/books/${book.id}/sections/create`} className="btn btn-secondary">Add Section</Link>
+                                    <Link to={`/books/${book_id}/sections`} className="btn btn-danger">Back</Link>&nbsp;
+                                    <Link to={`/books/${book_id}/sections/create/${section.id}`} className="btn btn-secondary">Add Subsection</Link>
                                 </div>
                             </h4>
                         </div>

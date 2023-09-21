@@ -18,4 +18,9 @@ class Section extends Model
     {
         return $this->belongsTo(Book::class);
     }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }
 }

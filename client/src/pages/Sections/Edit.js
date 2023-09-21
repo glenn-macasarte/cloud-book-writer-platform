@@ -5,6 +5,7 @@ import axios from 'axios';
 function Edit() {
     let { book_id } = useParams();
     let { section_id } = useParams();
+    let { parent_id } = useParams();
     
     const navigate = useNavigate();
 
@@ -30,6 +31,7 @@ function Edit() {
             title: section.title,
             description: section.description,
             book_id: book_id,
+            parent_id: parent_id ?? 0,
             updated_by: 2
         }
 

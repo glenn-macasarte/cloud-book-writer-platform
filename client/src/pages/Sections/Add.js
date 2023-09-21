@@ -4,6 +4,7 @@ import axios from "axios";
 
 function Add() {
     let { book_id } = useParams();
+    let { parent_id } = useParams();
 
     const navigate = useNavigate();
 
@@ -23,6 +24,7 @@ function Add() {
             title: section.title,
             description: section.description,
             book_id: book_id,
+            parent_id: parent_id ?? 0,
             created_by: 1
         }
 

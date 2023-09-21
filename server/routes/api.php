@@ -25,13 +25,14 @@ Route::group(['prefix' => 'v1'], function() {
     // routes for books module using apiResource
     Route::apiResource('books', BookController::class);
 
-    // routes for sections module using Controller group
+    // routes for sections/subsections module using Controller group
     Route::controller(SectionController::class)->group(function () {
         Route::get('/books/{book}/sections', 'index');
         Route::get('/books/{book}/sections/{section}', 'show');
         Route::post('/books/{book}/sections', 'store');
         Route::put('/books/{book}/sections/{section}', 'update');
         Route::delete('/books/{book}/sections/{section}', 'destroy');
+        Route::get('/books/{book}/sections/{section}/subsections', 'subsections');
     });
 
     // route for login

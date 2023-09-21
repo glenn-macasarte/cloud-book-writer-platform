@@ -17,8 +17,8 @@ function MyRouter() {
             <Route path="/books/create" element={<BookAdd />} />
             <Route path="/books/:id/edit" element={<BookEdit />} />
             <Route path="/books/:book_id/sections" element={<SectionList />} />
-            <Route path="/books/:book_id/sections/create" element={<SectionAdd />} />
-            <Route path="/books/:book_id/sections/:section_id/edit" element={<SectionEdit />} />
+            <Route path="/books/:book_id/sections/create/:parent_id?" element={<SectionAdd />} />
+            <Route path="/books/:book_id/sections/:section_id/edit/:parent_id?" element={<SectionEdit />} />
             <Route path="/books/:book_id/sections/:section_id/subsections" element={<SubSectionList />} />
         </Routes>        
     )
